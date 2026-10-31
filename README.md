@@ -23,7 +23,7 @@
 
 Або через термінал:
 ```bash
-cd c:\Users\sashk\Downloads\stock-alert-bot
+cd stock-alert-bot
 node index.js
 ```
 
