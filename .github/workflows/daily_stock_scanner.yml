@@ -1,0 +1,30 @@
+name: Daily IBKR Stock Scanner (13:00 CET)
+
+on:
+  schedule:
+    # 12:00 UTC = 13:00 за польським/центральноєвропейським часом (Пн-Пт, торгові дні)
+    - cron: '0 12 * * 1-5'
+  workflow_dispatch: # Кнопка для ручного тесту/запуску в будь-який момент
+
+jobs:
+  scan-market:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Клонування репозиторію
+        uses: actions/checkout@v4
+
+      - name: Налаштування Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Встановлення залежностей
+        run: npm ci || npm install
+
+      - name: Сканування ринку та відправка сигналів у Telegram
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: node daily_scanner.js
